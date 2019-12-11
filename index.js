@@ -56,9 +56,44 @@ server.post('/api/posts', async (req, res) => {
 
 })
 
+server.post('/api/posts/:id/comments', async (req, res) => {
+    if (!req.body.text) {
+        return res.status(400).json({errorMessage: 'Please provide text for the comment.'})
+    }
+    
+    let post = await db.findById(req.params.id)
 
+    let comment = {
+        text: req.body.text,
+        post_id: req.params.id
+    }
 
+    if (post.length === 0) {
+        res.status(404).json({message: 'The post with the specified ID does not exist.'})
+    } else if (post) {
+        let newComment = await db.insertComment(comment)
+        res.status(201).json(comment)
+    } else {
+        res.status(500).json({error: 'There was an error while saving the comment to the database.'})
+    }
+})
 
+server.delete('/api/posts/:id', async (req, res) => {
+    let post = await db.findById(req.params.id)
+    if (post.length === 0) {
+        res.status(404).json({message: 'The post with the specified ID does not exits.'})
+    } else if (post) {
+        let deletedPost = await db.remove(req.params.id)
+        res.status(200).json(deletedPost)
+    } else {
+        res.status(500).json({error: 'The post could not be removed.'})
+    }
+})    
+    let post = await db.findById(req.params.id)
+    if (post.length === 0) {
+        res.status(404).json({message: 'The post with the specified ID does not exist.'})
+    }
+})
 
 
 const port = 8000;

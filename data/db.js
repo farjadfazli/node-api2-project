@@ -14,11 +14,19 @@ module.exports = {
 };
 
 function find() {
-  return db('posts');
+  return db('posts')
+  // .then((obj) => {
+  //   console.log('Original data:', obj) 
+  //   throw new Error('fake error')
+  // })
 }
 
 function findById(id) {
-  return db('posts').where({ id: Number(id) });
+  return db('posts').where({ id: Number(id) })
+  // .then((obj) => {
+  //   console.log('Original data:', obj) 
+  //   throw new Error('fake error')
+  // })
 }
 
 function insert(post) {
